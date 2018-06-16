@@ -10,7 +10,7 @@ module Gtk2ToDoApp
       Logo: "#{XDG['DATA']}/gtk3app/gtk2todoapp/logo.png",
       window: {
         set_title: 'Gtk2ToDoApp',
-        set_default_size: [100,60],
+        set_default_size: [324,200],
         set_window_position: :center,
       },
       about_dialog: {
