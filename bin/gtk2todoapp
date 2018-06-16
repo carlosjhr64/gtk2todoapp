@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+require 'gtk2todoapp'
+Gtk3App.main(Gtk2ToDoApp)
