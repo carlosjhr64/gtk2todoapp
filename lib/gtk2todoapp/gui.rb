@@ -68,11 +68,12 @@ module Gtk2ToDoApp
       @tasks_box.each{|_|_.destroy}
       @tasks.each do |task|
         next if task.done? and not @done.active?
-        next if task.tags[:h]==1 and not @hidden.active?
+        next if task.tags.key?(:h) and not @hidden.active?
         next unless @projects.active==0 or task.projects.include?("+#{@projects.active_text}")
         next unless @contexts.active==0 or task.contexts.include?("@#{@contexts.active_text}")
-        hbox2 = Such::Box.new(@tasks_box, :hbox!)
-        Such::CheckButton.new(hbox2, [task.text], {set_active: task.done?})
+        task_box = Such::Box.new(@tasks_box, :hbox!)
+        cb = Such::CheckButton.new(task_box, [task.text], {set_active: task.done?})
+        cb.set_tooltip_text task.raw
       end
       @tasks_box.show_all
     end
