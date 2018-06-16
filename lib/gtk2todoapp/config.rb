@@ -2,9 +2,14 @@ module Gtk2ToDoApp
   using Rafini::String
   APPDIR = File.dirname File.dirname __dir__
   CONFIG = {
-    TODOTXT: "#{XDG['CACHE']}/gtk3app/gtk2todoapp/todo.txt",
-    PROJECTS: 'Projects:',
-    CONTEXTS: 'Contexts:',
+    TodoTxt: "#{XDG['CACHE']}/gtk3app/gtk2todoapp/todo.txt",
+    Projects: 'Projects:',
+    Contexts: 'Contexts:',
+    # Colors
+    ColorA: '#F00',
+    ColorB: '#0F0',
+    ColorC: '#00F',
+    ColorZ: '#000',
     thing: {
       HelpFile: 'https://github.com/carlosjhr64/gtk2todoapp',
       Logo: "#{XDG['DATA']}/gtk3app/gtk2todoapp/logo.png",

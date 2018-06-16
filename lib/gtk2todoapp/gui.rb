@@ -16,8 +16,13 @@ module Gtk2ToDoApp
     end
 
     def initialize(program)
+      ### Priority Colors ###
+      @colorA = Gdk::RGBA.parse(CONFIG[:ColorA])
+      @colorB = Gdk::RGBA.parse(CONFIG[:ColorB])
+      @colorC = Gdk::RGBA.parse(CONFIG[:ColorC])
+      @colorZ = Gdk::RGBA.parse(CONFIG[:ColorZ])
       ### Data ###
-      @tasks = Todo::List.new CONFIG[:TODOTXT]
+      @tasks = Todo::List.new CONFIG[:TodoTxt]
       @tasks.sort!{|a,b| COMPARE[a,b]}
 
       ### Scaffolding ###
@@ -74,19 +79,29 @@ module Gtk2ToDoApp
         task_box = Such::Box.new(@tasks_box, :hbox!)
         cb = Such::CheckButton.new(task_box, [task.text], {set_active: task.done?})
         cb.set_tooltip_text task.raw
+        case task.priority
+        when 'A'
+          cb.override_color :normal, @colorA
+        when 'B'
+          cb.override_color :normal, @colorB
+        when 'C'
+          cb.override_color :normal, @colorC
+        else
+          cb.override_color :normal, @colorZ
+        end
       end
       @tasks_box.show_all
     end
 
     def get_projects
       projects = @tasks.map{|_|_.projects}.flatten.uniq.sort.map{|_|_[1..-1]}
-      projects.unshift CONFIG[:PROJECTS]
+      projects.unshift CONFIG[:Projects]
       return projects
     end
 
     def get_contexts
       contexts = @tasks.map{|_|_.contexts}.flatten.uniq.sort.map{|_|_[1..-1]}
-      contexts.unshift CONFIG[:CONTEXTS]
+      contexts.unshift CONFIG[:Contexts]
       return contexts
     end
   end
