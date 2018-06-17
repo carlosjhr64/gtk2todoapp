@@ -112,7 +112,11 @@ module Gtk2ToDoApp
         end
         # Build the tasks box!
         task_box = Such::Box.new(@tasks_box, :hbox!)
-        cb = Such::CheckButton.new(task_box, [task.text], {set_active: task.done?}, 'clicked') do
+        text = task.text.dup
+        if due_on = task.due_on
+          text << ": #{due_on}"
+        end
+        cb = Such::CheckButton.new(task_box, [text], {set_active: task.done?}, 'clicked') do
           cb.active? ? task.done! : task.not_done!
           cb.set_tooltip_text task.to_s
         end
