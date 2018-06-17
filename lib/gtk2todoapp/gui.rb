@@ -27,7 +27,20 @@ module Gtk2ToDoApp
 
     def runs
       self.show_all
-      yield @entry.text if run == Gtk::ResponseType::OK
+      response = (run==Gtk::ResponseType::OK)? @entry.text : nil
+      destroy
+      return response
+    end
+  end
+
+  class ErrorDialog < Such::MessageDialog
+    def initialize(parent)
+      super([parent: parent, flags: :modal, type: :error, buttons_type: :close], :error_dialog)
+    end
+
+    def runs
+      set_secondary_text $!.message
+      run
       destroy
     end
   end
@@ -150,14 +163,26 @@ module Gtk2ToDoApp
     end
 
     def add_task!
-      AddTaskDialog.new(@window).runs do |raw|
+      if raw = AddTaskDialog.new(@window).runs
         begin
           task = Todo::Task.new raw
+          if due = task.tags[:due]
+            raise "Due date not yyyy-mm-dd!" unless due=~/^\d\d\d\d-\d\d-\d\d$/
+            Date.parse due # just checks for valid date
+          end
           @tasks << task
           @tasks.sort!{|a,b|b<=>a}
-          do_tasks
+          empty = task.projects.empty? 
+          @projects.remove_all unless empty
+          project = empty ? CONFIG[:Empty] : task.projects.first[1..-1]
+          index = 0
+          get_projects.each_with_index do |p,i|
+            index = i if project==p
+            @projects.append_text(p) unless empty
+          end
+          @projects.set_active index
         rescue
-          puts $!
+          ErrorDialog.new(@window).runs
         end
       end
     end

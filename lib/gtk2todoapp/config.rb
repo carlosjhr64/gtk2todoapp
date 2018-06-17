@@ -31,6 +31,8 @@ module Gtk2ToDoApp
       combo: Rafini::Empty::HASH,
       # CheckBox
       check: Rafini::Empty::HASH,
+      # Error Message Dialog
+      error_dialog: Rafini::Empty::HASH,
       # VBOX
       VBOX: [:vertical],
       vbox: Rafini::Empty::HASH,
