@@ -4,17 +4,6 @@ module Gtk2ToDoApp
   end
 
   class GUI
-    CMP = lambda do |a,b|
-      (a || '~') <=> (b || '~')
-    end
-
-    COMPARE = lambda do |a,b|
-      cmp = CMP[a.priority, b.priority]
-      cmp = CMP[a.tags[:due], b.tags[:due]] unless cmp==0
-      cmp = CMP[a.text, b.text]             unless cmp==0
-      return cmp
-    end
-
     def initialize(program)
       ### Priority Colors ###
       @colorA = Gdk::RGBA.parse(CONFIG[:ColorA])
@@ -23,7 +12,6 @@ module Gtk2ToDoApp
       @colorZ = Gdk::RGBA.parse(CONFIG[:ColorZ])
       ### Data ###
       @tasks = Todo::List.new CONFIG[:TodoTxt]
-      @tasks.sort!{|a,b| COMPARE[a,b]}
 
       ### Scaffolding ###
       window,minime,menu = program.window,program.mini_menu,program.app_menu
