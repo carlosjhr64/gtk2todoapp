@@ -14,6 +14,10 @@ module Gtk2ToDoApp
         @completed_on = nil
         @is_completed = false
       end
+
+      def set_created_on
+        @created_on = Date.today
+      end
     end
   end
 
@@ -173,6 +177,7 @@ module Gtk2ToDoApp
             raise "Due date not yyyy-mm-dd!" unless due=~/^\d\d\d\d-\d\d-\d\d$/
             Date.parse due # just checks for valid date
           end
+          task.set_created_on
           @done.set_active task.done?
           @hidden.set_active task.tags.key?(:h)
           @tasks << task
