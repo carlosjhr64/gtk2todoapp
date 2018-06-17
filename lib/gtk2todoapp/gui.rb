@@ -48,6 +48,7 @@ module Gtk2ToDoApp
   class GUI
     using Refinements
     def initialize(program)
+      @active = true
       ### Priority Colors ###
       @colorA = Gdk::RGBA.parse(CONFIG[:ColorA])
       @colorB = Gdk::RGBA.parse(CONFIG[:ColorB])
@@ -105,6 +106,7 @@ module Gtk2ToDoApp
     end
 
     def do_tasks
+      return unless @active
       @tasks_box.each{|_|_.destroy}
       @tasks.each do |task|
         # Include done?
@@ -164,25 +166,43 @@ module Gtk2ToDoApp
 
     def add_task!
       if raw = AddTaskDialog.new(@window).runs
+        @active = false
         begin
           task = Todo::Task.new raw
           if due = task.tags[:due]
             raise "Due date not yyyy-mm-dd!" unless due=~/^\d\d\d\d-\d\d-\d\d$/
             Date.parse due # just checks for valid date
           end
+          @done.set_active task.done?
+          @hidden.set_active task.tags.key?(:h)
           @tasks << task
           @tasks.sort!{|a,b|b<=>a}
-          empty = task.projects.empty? 
-          @projects.remove_all unless empty
-          project = empty ? CONFIG[:Empty] : task.projects.first[1..-1]
-          index = 0
+          # Projects
+          no_project = task.projects.empty? 
+          @projects.remove_all unless no_project
+          project = no_project ? CONFIG[:Empty] : task.projects.first[1..-1]
+          project_index = 0
           get_projects.each_with_index do |p,i|
-            index = i if project==p
-            @projects.append_text(p) unless empty
+            project_index = i if project==p
+            @projects.append_text(p) unless no_project
           end
-          @projects.set_active index
+          @projects.set_active project_index
+          # Contexts
+          no_context = task.contexts.empty? 
+          @contexts.remove_all unless no_context
+          context = no_context ? CONFIG[:Empty] : task.contexts.first[1..-1]
+          context_index = 0
+          get_contexts.each_with_index do |c,i|
+            context_index = i if context==c
+            @contexts.append_text(c) unless no_context
+          end
+          @contexts.set_active context_index
+          @active = true
+          do_tasks
         rescue
           ErrorDialog.new(@window).runs
+        ensure
+          @active = true
         end
       end
     end
