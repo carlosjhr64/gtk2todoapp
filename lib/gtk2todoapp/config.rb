@@ -43,6 +43,8 @@ module Gtk2ToDoApp
         into: [:pack_start, expand: true, fill: true, padding: 1],
       },
       # Menu Items
+      add_task_dialog: Rafini::Empty::HASH,
+      add_task_entry: Rafini::Empty::HASH,
       ADD_TASK: [label: 'Add Task'],
       add_task!: [:ADD_TASK, 'activate'],
     }

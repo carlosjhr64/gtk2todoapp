@@ -3,6 +3,21 @@ module Gtk2ToDoApp
     GUI.new(program)
   end
 
+  class AddTaskDialog < Such::Dialog
+    def initialize(parent)
+      super([parent: parent], :add_task_dialog)
+      @entry = Such::Entry.new(child, :add_task_entry)
+      add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
+      add_button(Gtk::Stock::OK, Gtk::ResponseType::OK)
+    end
+
+    def runs
+      self.show_all
+      yield @entry.text if run == Gtk::ResponseType::OK
+      destroy
+    end
+  end
+
   class GUI
     def initialize(program)
       ### Priority Colors ###
@@ -12,13 +27,14 @@ module Gtk2ToDoApp
       @colorZ = Gdk::RGBA.parse(CONFIG[:ColorZ])
       ### Data ###
       @tasks = Todo::List.new CONFIG[:TodoTxt]
+      @tasks.sort!{|a,b|b<=>a}
 
       ### Scaffolding ###
-      window,minime,menu = program.window,program.mini_menu,program.app_menu
+      @window,minime,menu = program.window,program.mini_menu,program.app_menu
       menu.each{|_|_.destroy if _.key==:fs!}
       menu.append_menu_item(:add_task!){ add_task! }
       minime.each{|_|_.destroy}
-      vbox = Such::Box.new(window, :vbox!)
+      vbox = Such::Box.new(@window, :vbox!)
 
       ### Filters Box ###
       filters_box = Such::Box.new(vbox, :hbox!)
@@ -57,7 +73,7 @@ module Gtk2ToDoApp
       do_tasks
 
       # Show All
-      window.show_all
+      @window.show_all
     end
 
     def do_tasks
@@ -97,7 +113,16 @@ module Gtk2ToDoApp
     end
 
     def add_task!
-      # TODO
+      AddTaskDialog.new(@window).runs do |raw|
+        begin
+          task = Todo::Task.new raw
+          @tasks << task
+          @tasks.sort!{|a,b|b<=>a}
+          do_tasks
+        rescue
+          puts $!
+        end
+      end
     end
   end
 end
