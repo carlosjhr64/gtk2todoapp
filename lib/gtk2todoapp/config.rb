@@ -42,6 +42,9 @@ module Gtk2ToDoApp
       expansive: {
         into: [:pack_start, expand: true, fill: true, padding: 1],
       },
+      # Menu Items
+      ADD_TASK: [label: 'Add Task'],
+      add_task!: [:ADD_TASK, 'activate'],
     }
   }
 end

@@ -15,6 +15,9 @@ module Gtk2ToDoApp
 
       ### Scaffolding ###
       window,minime,menu = program.window,program.mini_menu,program.app_menu
+      menu.each{|_|_.destroy if _.key==:fs!}
+      menu.append_menu_item(:add_task!){ add_task! }
+      minime.each{|_|_.destroy}
       vbox = Such::Box.new(window, :vbox!)
 
       ### Filters Box ###
@@ -91,6 +94,10 @@ module Gtk2ToDoApp
       contexts = @tasks.map{|_|_.contexts}.flatten.uniq.sort.map{|_|_[1..-1]}
       contexts.unshift CONFIG[:Contexts]
       return contexts
+    end
+
+    def add_task!
+      # TODO
     end
   end
 end
