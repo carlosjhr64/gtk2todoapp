@@ -3,6 +3,20 @@ module Gtk2ToDoApp
     GUI.new(program)
   end
 
+  module Refinements
+    refine Todo::Task do
+      def done!
+        @completed_on = Date.today
+        @is_completed = true
+      end
+
+      def not_done!
+        @completed_on = nil
+        @is_completed = false
+      end
+    end
+  end
+
   class AddTaskDialog < Such::Dialog
     def initialize(parent)
       super([parent: parent], :add_task_dialog)
@@ -19,6 +33,7 @@ module Gtk2ToDoApp
   end
 
   class GUI
+    using Refinements
     def initialize(program)
       ### Priority Colors ###
       @colorA = Gdk::RGBA.parse(CONFIG[:ColorA])
@@ -84,8 +99,11 @@ module Gtk2ToDoApp
         next unless @projects.active==0 or task.projects.include?("+#{@projects.active_text}")
         next unless @contexts.active==0 or task.contexts.include?("@#{@contexts.active_text}")
         task_box = Such::Box.new(@tasks_box, :hbox!)
-        cb = Such::CheckButton.new(task_box, [task.text], {set_active: task.done?})
-        cb.set_tooltip_text task.raw
+        cb = Such::CheckButton.new(task_box, [task.text], {set_active: task.done?}, 'clicked') do
+          cb.active? ? task.done! : task.not_done!
+          cb.set_tooltip_text task.to_s
+        end
+        cb.set_tooltip_text task.to_s
         case task.priority
         when 'A'
           cb.override_color :normal, @colorA
