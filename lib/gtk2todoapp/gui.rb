@@ -124,5 +124,9 @@ module Gtk2ToDoApp
         end
       end
     end
+
+    def finalize
+      @tasks.save!
+    end
   end
 end
