@@ -5,6 +5,7 @@ module Gtk2ToDoApp
     TodoTxt: "#{XDG['CACHE']}/gtk3app/gtk2todoapp/todo.txt",
     Projects: 'Projects:',
     Contexts: 'Contexts:',
+    Empty: '-',
     # Colors
     ColorA: '#F00',
     ColorB: '#0F0',

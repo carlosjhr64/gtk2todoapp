@@ -94,14 +94,23 @@ module Gtk2ToDoApp
     def do_tasks
       @tasks_box.each{|_|_.destroy}
       @tasks.each do |task|
+        # Include done?
         next if task.done? and not @done.active?
+        # Include hidden?
         next if task.tags.key?(:h) and not @hidden.active?
-        if @projects.active_text == '-'
+        # Which projects to include?
+        if @projects.active_text == CONFIG[:Empty]
           next unless task.projects.empty?
         else
           next unless @projects.active==0 or task.projects.include?("+#{@projects.active_text}")
+        end
+        # Which contexts to include?
+        if @contexts.active_text == CONFIG[:Empty]
+          next unless task.contexts.empty?
+        else
           next unless @contexts.active==0 or task.contexts.include?("@#{@contexts.active_text}")
         end
+        # Build the tasks box!
         task_box = Such::Box.new(@tasks_box, :hbox!)
         cb = Such::CheckButton.new(task_box, [task.text], {set_active: task.done?}, 'clicked') do
           cb.active? ? task.done! : task.not_done!
@@ -125,13 +134,14 @@ module Gtk2ToDoApp
     def get_projects
       projects = @tasks.map{|_|_.projects}.flatten.uniq.sort.map{|_|_[1..-1]}
       projects.unshift CONFIG[:Projects]
-      projects.push '-'
+      projects.push CONFIG[:Empty]
       return projects
     end
 
     def get_contexts
       contexts = @tasks.map{|_|_.contexts}.flatten.uniq.sort.map{|_|_[1..-1]}
       contexts.unshift CONFIG[:Contexts]
+      contexts.push CONFIG[:Empty]
       return contexts
     end
 
