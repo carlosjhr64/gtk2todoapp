@@ -274,12 +274,21 @@ module Gtk2ToDoApp
       end
     end
 
+    def truncate_archive
+      done_txt,lines = CONFIG[:DoneTxt],CONFIG[:ArchiveLines]
+      if `wc -l #{done_txt}`.to_i > lines
+        if system "tail -n #{lines} #{done_txt} > #{done_txt}.tail"
+          system "mv #{done_txt}.tail #{done_txt}"
+        end
+      end
+    end
+
     def archive(fh)
-      today,archive = Date.today,CONFIG[:Archive].to_i
+      today,archive_days = Date.today,CONFIG[:ArchiveDays].to_i
       @tasks.delete_if do |task|
         deletes = false
         # If done and old...
-        if task.done? and (today - task.completed_on).to_i > archive
+        if task.done? and (today - task.completed_on).to_i > archive_days
           tags = task.tags
           # Unless re-accurring...
           unless [:daily, :weekly, :monthly, :yearly].any?{|_|tags.key?(_)}
@@ -295,6 +304,7 @@ module Gtk2ToDoApp
     def finalize
       File.open(CONFIG[:DoneTxt], 'a'){|fh| archive(fh)}
       @tasks.save!
+      truncate_archive
     end
   end
 end
