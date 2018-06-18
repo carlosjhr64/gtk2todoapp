@@ -193,16 +193,19 @@ module Gtk2ToDoApp
         @active = false
         begin
           task = Todo::Task.new raw
+          # Some quick validations
           if due = task.tags[:due]
             raise "Due date not yyyy-mm-dd!" unless due=~/^\d\d\d\d-\d\d-\d\d$/
             Date.parse due # just checks for valid date
           end
+          # Auto set some values
           task.set_created_on
+          # Reset the filters
           @done.set_active task.done?
           @hidden.set_active task.tags.key?(:h)
           @tasks << task
           @tasks.sort!{|a,b|b<=>a}
-          # Projects
+          # Projects filter
           no_project = task.projects.empty? 
           @projects.remove_all unless no_project
           project = no_project ? CONFIG[:Empty] : task.projects.first[1..-1]
@@ -212,7 +215,7 @@ module Gtk2ToDoApp
             @projects.append_text(p) unless no_project
           end
           @projects.set_active project_index
-          # Contexts
+          # Contexts filter
           no_context = task.contexts.empty? 
           @contexts.remove_all unless no_context
           context = no_context ? CONFIG[:Empty] : task.contexts.first[1..-1]
@@ -222,6 +225,7 @@ module Gtk2ToDoApp
             @contexts.append_text(c) unless no_context
           end
           @contexts.set_active context_index
+          # Redo tasks list
           @active = true
           do_tasks
         rescue
