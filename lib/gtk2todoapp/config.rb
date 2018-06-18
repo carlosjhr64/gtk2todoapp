@@ -1,16 +1,23 @@
 module Gtk2ToDoApp
   using Rafini::String
+
   APPDIR = File.dirname File.dirname __dir__
+
   CONFIG = {
+    # Files
     TodoTxt: "#{XDG['CACHE']}/gtk3app/gtk2todoapp/todo.txt",
+    # Strings
     Projects: 'Projects:',
     Contexts: 'Contexts:',
     Empty: '-',
+    Done: 'Done',
+    Hidden: 'Hidden',
     # Colors
-    ColorA: '#F00',
-    ColorB: '#0F0',
-    ColorC: '#00F',
+    ColorA: '#D00',
+    ColorB: '#0D0',
+    ColorC: '#00D',
     ColorZ: '#000',
+    # GUI Config
     thing: {
       HelpFile: 'https://github.com/carlosjhr64/gtk2todoapp',
       Logo: "#{XDG['DATA']}/gtk3app/gtk2todoapp/logo.png",
@@ -42,14 +49,16 @@ module Gtk2ToDoApp
       hbox: Rafini::Empty::HASH,
       hbox!: [:HBOX, :hbox],
       # Scrolled Window
-      expansive: {
+      scrolled_window: {
         into: [:pack_start, expand: true, fill: true, padding: 1],
       },
-      # More...
-      add_task_dialog: {set_title: 'Add Task!'},
-      add_task_entry: {set_activates_default: true},
+      # Add Task Menu Item
       ADD_TASK: [label: 'Add Task'],
       add_task!: [:ADD_TASK, 'activate'],
+      # Add Task Dialog
+      add_task_dialog: {set_title: 'Add Task!'},
+      add_task_entry: {set_activates_default: true},
+      # Delete Task Dialog
       delete_task_dialog: {set_title: 'Delete?'},
       delete_task_label: Rafini::Empty::HASH,
     }

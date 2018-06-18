@@ -106,18 +106,18 @@ module Gtk2ToDoApp
 
       # Done
       @done = Such::CheckButton.new(filters_box,
-                                    ['Done'],
+                                    [CONFIG[:Done]],
                                     :check,
                                     'clicked'){ do_tasks }
 
       # Hidden
       @hidden = Such::CheckButton.new(filters_box,
-                                      ['Hidden'],
+                                      [CONFIG[:Hidden]],
                                       :check,
                                       'clicked'){ do_tasks }
 
       # Scrolled Tasks Box
-      scrolled = Such::ScrolledWindow.new(vbox, :expansive)
+      scrolled = Such::ScrolledWindow.new(vbox, :scrolled_window)
       @tasks_box = Such::Box.new(scrolled, :vbox!)
       do_tasks
 
