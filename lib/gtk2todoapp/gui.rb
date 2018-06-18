@@ -129,12 +129,6 @@ module Gtk2ToDoApp
                                     :check,
                                     'clicked'){ do_tasks }
 
-      # Hidden
-      @hidden = Such::CheckButton.new(filters_box,
-                                      [CONFIG[:Hidden]],
-                                      :check,
-                                      'clicked'){ do_tasks }
-
       # Scrolled Tasks Box
       scrolled = Such::ScrolledWindow.new(vbox, :scrolled_window)
       @tasks_box = Such::Box.new(scrolled, :vbox!)
@@ -150,8 +144,6 @@ module Gtk2ToDoApp
       @tasks.each do |task|
         # Include done?
         next if task.done? and not @done.active?
-        # Include hidden?
-        next if task.tags.key?(:h) and not @hidden.active?
         # Which projects to include?
         if @projects.active_text == CONFIG[:Empty]
           next unless task.projects.empty?
@@ -241,7 +233,6 @@ module Gtk2ToDoApp
           task.set_created_on
           # Reset the filters
           @done.set_active task.done?
-          @hidden.set_active tags.key?(:h)
           @tasks << task
           @tasks.sort!{|a,b|b<=>a}
           # Projects filter

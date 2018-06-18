@@ -21,7 +21,6 @@ module Gtk2ToDoApp
     Late: '#FF0000',
     # Integers, Days
     Archive: 28,
-    Unhide: 28,
     # GUI Config
     thing: {
       HelpFile: 'https://github.com/carlosjhr64/gtk2todoapp',
