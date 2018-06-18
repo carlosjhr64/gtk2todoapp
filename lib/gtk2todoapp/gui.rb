@@ -67,6 +67,23 @@ module Gtk2ToDoApp
 
   class GUI
     using Refinements
+
+    PREVIOUS_WDAY = lambda{|t,d| t - ((t.wday - d) % 7)}
+    PREVIOUS_MDAY = lambda{|t,d| p=t.prev_month; Date.new(p.year, p.month, d)}
+    PREVIOUS_YDAY = lambda{|t,m,d| p=t.prev_year; Date.new(p.year, m, d)}
+
+    def resets
+      today = Date.today
+      @tasks.each do |task|
+        next unless task.done?
+        tags = task.tags
+        task.not_done! if tags.key?(:daily) and task.completed_on < today
+        task.not_done! if tags.key?(:weekly) and task.completed_on < PREVIOUS_WDAY[today, tags[:weekly].to_i]
+        task.not_done! if tags.key?(:monthly) and task.completed_on <= PREVIOUS_MDAY[today, tags[:monthly].to_i]
+        task.not_done! if tags.key?(:yearly) and task.completed_on <= PREVIOUS_YDAY[today, *tags[:yearly].split('-').map{|_|_.to_i}]
+      end
+    end
+
     def initialize(program)
       @active = true
       ### Priority Colors ###
@@ -76,6 +93,7 @@ module Gtk2ToDoApp
       @colorZ = Gdk::RGBA.parse(CONFIG[:ColorZ])
       ### Data ###
       @tasks = Todo::List.new CONFIG[:TodoTxt]
+      resets
       @tasks.sort!{|a,b|b<=>a}
 
       ### Scaffolding ###
@@ -194,15 +212,31 @@ module Gtk2ToDoApp
         begin
           task = Todo::Task.new raw
           # Some quick validations
-          if due = task.tags[:due]
-            raise "Due date not yyyy-mm-dd!" unless due=~/^\d\d\d\d-\d\d-\d\d$/
+          tags = task.tags
+          if due = tags[:due]
+            raise "due: date not yyyy-mm-dd!" unless due=~/^\d\d\d\d-\d\d-\d\d$/
             Date.parse due # just checks for valid date
+          end
+          if daily = tags[:daily]
+            raise "daily: must be 1." unless daily==1
+          end
+          if weekly = tags[:weekly]
+            raise "weekly: must be in (0..6)." unless weekly=~/^[0123456]$/
+          end
+          if monthly = tags[:monthly]
+            raise "montly: must be in (1..28)." unless monthly=~/^\d\d?$/ and (1..28).include?(monthly.to_i)
+          end
+          if yearly = tags[:yearly]
+            raise "yearly: must be mm-dd." unless monthly=~/^[01]\d-[0123]\d$/
+            m,d = monthly.split('-').map{|_|_.to_i}
+            raise "Bad month(1..12) number in mm-dd." unless (1..12).include?(m)
+            raise "Bad day(1..28) number in mm-dd." unless (1..28).include?(d)
           end
           # Auto set some values
           task.set_created_on
           # Reset the filters
           @done.set_active task.done?
-          @hidden.set_active task.tags.key?(:h)
+          @hidden.set_active tags.key?(:h)
           @tasks << task
           @tasks.sort!{|a,b|b<=>a}
           # Projects filter
