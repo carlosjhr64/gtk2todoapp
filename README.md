@@ -9,6 +9,8 @@ A [todo.txt](http://todotxt.org/)
 [gtk3app](https://https://rubygems.org/gems/gtk2app) gui
 using [todo-txt](https://rubygems.org/gems/todo-txt).
 
-## INSTALL
+## INSTALL:
 
     $ sudo gem install gtk2todoapp
+
+## HELP:
