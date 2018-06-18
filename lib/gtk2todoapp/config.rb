@@ -6,6 +6,7 @@ module Gtk2ToDoApp
   CONFIG = {
     # Files
     TodoTxt: "#{XDG['CACHE']}/gtk3app/gtk2todoapp/todo.txt",
+    DoneTxt: "#{XDG['CACHE']}/gtk3app/gtk2todoapp/done.txt",
     # Strings
     Projects: 'Projects:',
     Contexts: 'Contexts:',
@@ -18,6 +19,9 @@ module Gtk2ToDoApp
     ColorC: '#00008B',
     ColorZ: '#000000',
     Late: '#FF0000',
+    # Integers, Days
+    Archive: 28,
+    Unhide: 28,
     # GUI Config
     thing: {
       HelpFile: 'https://github.com/carlosjhr64/gtk2todoapp',

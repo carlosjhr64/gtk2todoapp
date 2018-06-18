@@ -283,7 +283,26 @@ module Gtk2ToDoApp
       end
     end
 
+    def archive(fh)
+      today,archive = Date.today,CONFIG[:Archive].to_i
+      @tasks.delete_if do |task|
+        deletes = false
+        # If done and old...
+        if task.done? and (today - task.completed_on).to_i > archive
+          tags = task.tags
+          # Unless re-accurring...
+          unless [:daily, :weekly, :monthly, :yearly].any?{|_|tags.key?(_)}
+            # Then archive done tasks!
+            fh.puts task.to_s
+            deletes = true
+          end
+        end
+        deletes
+      end
+    end
+
     def finalize
+      File.open(CONFIG[:DoneTxt], 'a'){|fh| archive(fh)}
       @tasks.save!
     end
   end
