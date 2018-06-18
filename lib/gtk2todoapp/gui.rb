@@ -91,6 +91,7 @@ module Gtk2ToDoApp
       @colorB = Gdk::RGBA.parse(CONFIG[:ColorB])
       @colorC = Gdk::RGBA.parse(CONFIG[:ColorC])
       @colorZ = Gdk::RGBA.parse(CONFIG[:ColorZ])
+      @late = Gdk::RGBA.parse(CONFIG[:Late])
       ### Data ###
       @tasks = Todo::List.new CONFIG[:TodoTxt]
       resets
@@ -174,15 +175,19 @@ module Gtk2ToDoApp
           cb.set_tooltip_text task.to_s
         end
         cb.set_tooltip_text task.to_s
-        case task.priority
-        when 'A'
-          cb.override_color :normal, @colorA
-        when 'B'
-          cb.override_color :normal, @colorB
-        when 'C'
-          cb.override_color :normal, @colorC
+        if task.overdue?
+          cb.override_color :normal, @late
         else
-          cb.override_color :normal, @colorZ
+          case task.priority
+          when 'A'
+            cb.override_color :normal, @colorA
+          when 'B'
+            cb.override_color :normal, @colorB
+          when 'C'
+            cb.override_color :normal, @colorC
+          else
+            cb.override_color :normal, @colorZ
+          end
         end
         eb = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
           delete_task!(task) if e.button==1

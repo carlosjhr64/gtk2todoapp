@@ -13,10 +13,11 @@ module Gtk2ToDoApp
     Done: 'Done',
     Hidden: 'Hidden',
     # Colors
-    ColorA: '#D00',
-    ColorB: '#0D0',
-    ColorC: '#00D',
-    ColorZ: '#000',
+    ColorA: '#FF8C00',
+    ColorB: '#008000',
+    ColorC: '#00008B',
+    ColorZ: '#000000',
+    Late: '#FF0000',
     # GUI Config
     thing: {
       HelpFile: 'https://github.com/carlosjhr64/gtk2todoapp',
