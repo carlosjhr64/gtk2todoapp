@@ -21,6 +21,22 @@ module Gtk2ToDoApp
     end
   end
 
+  class DeleteTaskDialog < Such::Dialog
+    def initialize(parent, text)
+      super([parent: parent], :delete_task_dialog)
+      Such::Label.new(child, [text], :delete_task_label)
+      add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
+      add_button(Gtk::Stock::OK, Gtk::ResponseType::OK)
+    end
+
+    def runs
+      self.show_all
+      response = (run==Gtk::ResponseType::OK)
+      destroy
+      return response
+    end
+  end
+
   class AddTaskDialog < Such::Dialog
     def initialize(parent)
       super([parent: parent], :add_task_dialog)
@@ -150,6 +166,10 @@ module Gtk2ToDoApp
         else
           cb.override_color :normal, @colorZ
         end
+        eb = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
+          delete_task!(task) if e.button==1
+        end
+        Such::Image.new(eb, [stock: Gtk::Stock::DELETE])
       end
       @tasks_box.show_all
     end
@@ -209,6 +229,14 @@ module Gtk2ToDoApp
         ensure
           @active = true
         end
+      end
+    end
+
+    def delete_task!(task)
+      if DeleteTaskDialog.new(@window, task.text).runs
+        s = task.to_s
+        @tasks.delete_if{|t| t.to_s==s}
+        do_tasks
       end
     end
 
