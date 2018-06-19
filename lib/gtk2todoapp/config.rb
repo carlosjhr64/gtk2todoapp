@@ -11,7 +11,6 @@ module Gtk2ToDoApp
     Projects: 'Projects:',
     Contexts: 'Contexts:',
     Empty: '-',
-    Done: 'Done',
     Hidden: 'Hidden',
     # Colors
     ColorA: '#FF8C00',
@@ -20,6 +19,7 @@ module Gtk2ToDoApp
     ColorZ: '#000000',
     Late: '#FF0000',
     # Integers
+    HiddenDays: 28,
     ArchiveDays: 28,
     ArchiveLines: 1000,
     # GUI Config

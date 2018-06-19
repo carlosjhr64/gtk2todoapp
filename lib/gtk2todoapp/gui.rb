@@ -124,8 +124,8 @@ module Gtk2ToDoApp
                                'changed'){ do_tasks }
 
       # Done
-      @done = Such::CheckButton.new(filters_box,
-                                    [CONFIG[:Done]],
+      @hidden = Such::CheckButton.new(filters_box,
+                                    [CONFIG[:Hidden]],
                                     :check,
                                     'clicked'){ do_tasks }
 
@@ -143,7 +143,7 @@ module Gtk2ToDoApp
       @tasks_box.each{|_|_.destroy}
       @tasks.each do |task|
         # Include done?
-        next if task.done? and not @done.active?
+        next if task.done? and not @hidden.active?
         # Which projects to include?
         if @projects.active_text == CONFIG[:Empty]
           next unless task.projects.empty?
@@ -232,7 +232,7 @@ module Gtk2ToDoApp
           # Auto set some values
           task.set_created_on
           # Reset the filters
-          @done.set_active task.done?
+          @hidden.set_active task.done?
           @tasks << task
           @tasks.sort!{|a,b|b<=>a}
           # Projects filter
