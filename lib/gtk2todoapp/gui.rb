@@ -215,7 +215,7 @@ module Gtk2ToDoApp
             Date.parse due # just checks for valid date
           end
           if daily = tags[:daily]
-            raise "daily: must be 1." unless daily==1
+            raise "daily: must be 1." unless daily=='1'
           end
           if weekly = tags[:weekly]
             raise "weekly: must be in (0..6)." unless weekly=~/^[0123456]$/
@@ -284,7 +284,7 @@ module Gtk2ToDoApp
     end
 
     def archive(fh)
-      today,archive_days = Date.today,CONFIG[:ArchiveDays].to_i
+      today, archive_days, appended = Date.today, CONFIG[:ArchiveDays].to_i, false
       @tasks.delete_if do |task|
         deletes = false
         # If done and old...
@@ -295,16 +295,17 @@ module Gtk2ToDoApp
             # Then archive done tasks!
             fh.puts task.to_s
             deletes = true
+            appended ||= true
           end
         end
         deletes
       end
+      truncate_archive if appended
     end
 
     def finalize
       File.open(CONFIG[:DoneTxt], 'a'){|fh| archive(fh)}
       @tasks.save!
-      truncate_archive
     end
   end
 end
