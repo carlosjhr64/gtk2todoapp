@@ -19,7 +19,7 @@ module Gtk2ToDoApp
     ColorZ: '#000000',
     Late: '#FF0000',
     # Integers
-    HiddenDays: 28,
+    HiddenDays: 91,
     ArchiveDays: 28,
     ArchiveLines: 1000,
     # GUI Config

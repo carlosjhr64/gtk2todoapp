@@ -141,9 +141,14 @@ module Gtk2ToDoApp
     def do_tasks
       return unless @active
       @tasks_box.each{|_|_.destroy}
+      today = Date.today
       @tasks.each do |task|
         # Include done?
-        next if task.done? and not @hidden.active?
+        due_on = task.due_on
+        unless @hidden.active?
+          next if task.done?
+          next if due_on and (due_on - today).to_i > CONFIG[:HiddenDays]
+        end
         # Which projects to include?
         if @projects.active_text == CONFIG[:Empty]
           next unless task.projects.empty?
@@ -159,9 +164,7 @@ module Gtk2ToDoApp
         # Build the tasks box!
         task_box = Such::Box.new(@tasks_box, :hbox!)
         text = task.text.dup
-        if due_on = task.due_on
-          text << ": #{due_on}"
-        end
+        text << ": #{due_on}" if due_on
         cb = Such::CheckButton.new(task_box, [text], {set_active: task.done?}, 'clicked') do
           cb.active? ? task.done! : task.not_done!
           cb.set_tooltip_text task.to_s
