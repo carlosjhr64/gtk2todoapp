@@ -72,6 +72,23 @@ module Gtk2ToDoApp
     PREVIOUS_MDAY = lambda{|t,d| p=t.prev_month; Date.new(p.year, p.month, d)}
     PREVIOUS_YDAY = lambda{|t,m,d| p=t.prev_year; Date.new(p.year, m, d)}
 
+    CMP = lambda do |a,b|
+      cmp,x,y = 0,nil,nil
+      [:completed_on, :priority, :due_on, :created_on, :text].each do |m|
+        case m
+        when :completed_on, :created_on
+          x,y = (b.method(m).call || '~').to_s, (a.method(m).call || '~').to_s
+        when :due_on
+          x,y = (a.method(m).call || '~').to_s, (b.method(m).call || '~').to_s
+        else
+          x,y = (a.method(m).call || '~'), (b.method(m).call || '~')
+        end
+        cmp = x<=>y
+        break unless cmp==0
+      end
+      cmp
+    end
+
     def resets
       today = Date.today
       @tasks.each do |task|
@@ -95,7 +112,7 @@ module Gtk2ToDoApp
       ### Data ###
       @tasks = Todo::List.new CONFIG[:TodoTxt]
       resets
-      @tasks.sort!{|a,b|b<=>a}
+      @tasks.sort!{|a,b|CMP[a,b]}
 
       ### Scaffolding ###
       @window,minime,menu = program.window,program.mini_menu,program.app_menu
@@ -269,7 +286,7 @@ module Gtk2ToDoApp
 
     def _add_task(task)
       @tasks << task
-      @tasks.sort!{|a,b|b<=>a}
+      @tasks.sort!{|a,b|CMP[a,b]}
       reset_filters(task)
     end
 
