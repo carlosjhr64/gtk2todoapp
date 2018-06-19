@@ -214,59 +214,71 @@ module Gtk2ToDoApp
       return contexts
     end
 
+    def new_task(raw)
+      task = Todo::Task.new raw
+      # Some quick validations
+      tags = task.tags
+      if due = tags[:due]
+        raise "due: date not yyyy-mm-dd!" unless due=~/^\d\d\d\d-\d\d-\d\d$/
+        Date.parse due # just checks for valid date
+      end
+      if daily = tags[:daily]
+        raise "daily: must be 1." unless daily=='1'
+      end
+      if weekly = tags[:weekly]
+        raise "weekly: must be in (0..6)." unless weekly=~/^[0123456]$/
+      end
+      if monthly = tags[:monthly]
+        raise "montly: must be in (1..28)." unless monthly=~/^\d\d?$/ and (1..28).include?(monthly.to_i)
+      end
+      if yearly = tags[:yearly]
+        raise "yearly: must be mm-dd." unless monthly=~/^[01]\d-[0123]\d$/
+        m,d = monthly.split('-').map{|_|_.to_i}
+        raise "Bad month(1..12) number in mm-dd." unless (1..12).include?(m)
+        raise "Bad day(1..28) number in mm-dd." unless (1..28).include?(d)
+      end
+      # Auto set some values
+      task.set_created_on
+      return task
+    end
+
+    def reset_filters(task)
+      # Reset the filters
+      @hidden.set_active task.done?
+      # Projects filter
+      no_project = task.projects.empty?
+      @projects.remove_all unless no_project
+      project = no_project ? CONFIG[:Empty] : task.projects.first[1..-1]
+      project_index = 0
+      get_projects.each_with_index do |p,i|
+        project_index = i if project==p
+        @projects.append_text(p) unless no_project
+      end
+      @projects.set_active project_index
+      # Contexts filter
+      no_context = task.contexts.empty?
+      @contexts.remove_all unless no_context
+      context = no_context ? CONFIG[:Empty] : task.contexts.first[1..-1]
+      context_index = 0
+      get_contexts.each_with_index do |c,i|
+        context_index = i if context==c
+        @contexts.append_text(c) unless no_context
+      end
+      @contexts.set_active context_index
+    end
+
+    def _add_task(task)
+      @tasks << task
+      @tasks.sort!{|a,b|b<=>a}
+      reset_filters(task)
+    end
+
     def add_task!
       if raw = EditTaskDialog.new(@window).runs
         @active = false
         begin
-          task = Todo::Task.new raw
-          # Some quick validations
-          tags = task.tags
-          if due = tags[:due]
-            raise "due: date not yyyy-mm-dd!" unless due=~/^\d\d\d\d-\d\d-\d\d$/
-            Date.parse due # just checks for valid date
-          end
-          if daily = tags[:daily]
-            raise "daily: must be 1." unless daily=='1'
-          end
-          if weekly = tags[:weekly]
-            raise "weekly: must be in (0..6)." unless weekly=~/^[0123456]$/
-          end
-          if monthly = tags[:monthly]
-            raise "montly: must be in (1..28)." unless monthly=~/^\d\d?$/ and (1..28).include?(monthly.to_i)
-          end
-          if yearly = tags[:yearly]
-            raise "yearly: must be mm-dd." unless monthly=~/^[01]\d-[0123]\d$/
-            m,d = monthly.split('-').map{|_|_.to_i}
-            raise "Bad month(1..12) number in mm-dd." unless (1..12).include?(m)
-            raise "Bad day(1..28) number in mm-dd." unless (1..28).include?(d)
-          end
-          # Auto set some values
-          task.set_created_on
-          # Reset the filters
-          @hidden.set_active task.done?
-          @tasks << task
-          @tasks.sort!{|a,b|b<=>a}
-          # Projects filter
-          no_project = task.projects.empty? 
-          @projects.remove_all unless no_project
-          project = no_project ? CONFIG[:Empty] : task.projects.first[1..-1]
-          project_index = 0
-          get_projects.each_with_index do |p,i|
-            project_index = i if project==p
-            @projects.append_text(p) unless no_project
-          end
-          @projects.set_active project_index
-          # Contexts filter
-          no_context = task.contexts.empty? 
-          @contexts.remove_all unless no_context
-          context = no_context ? CONFIG[:Empty] : task.contexts.first[1..-1]
-          context_index = 0
-          get_contexts.each_with_index do |c,i|
-            context_index = i if context==c
-            @contexts.append_text(c) unless no_context
-          end
-          @contexts.set_active context_index
-          # Redo tasks list
+          task = new_task(raw)
+          _add_task(task)
           @active = true
           do_tasks
         rescue
@@ -279,8 +291,19 @@ module Gtk2ToDoApp
 
     def edit_task!(task)
       s = task.to_s
-      if edited = EditTaskDialog.new(@window, s).runs
-        # TODO
+      if raw = EditTaskDialog.new(@window, s).runs
+        @active = false
+        begin
+          task = new_task(raw)
+          @tasks.delete_if{|t| t.to_s==s}
+          _add_task(task)
+          @active = true
+          do_tasks
+        rescue
+          ErrorDialog.new(@window).runs
+        ensure
+          @active = true
+        end
       end
     end
 
