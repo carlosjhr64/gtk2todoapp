@@ -65,8 +65,8 @@ module Gtk2ToDoApp
       ADD_TASK: [label: 'Add Task'],
       add_task!: [:ADD_TASK, 'activate'],
       # Add Task Dialog
-      add_task_dialog: {set_title: 'Add Task!'},
-      add_task_entry: {set_activates_default: true},
+      edit_task_dialog: {set_title: 'Task:'},
+      edit_task_entry: {set_width_request: 300},
       # Delete Task Dialog
       delete_task_dialog: {set_title: 'Delete?'},
       delete_task_label: Rafini::Empty::HASH,

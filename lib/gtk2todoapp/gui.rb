@@ -37,10 +37,10 @@ module Gtk2ToDoApp
     end
   end
 
-  class AddTaskDialog < Such::Dialog
-    def initialize(parent)
-      super([parent: parent], :add_task_dialog)
-      @entry = Such::Entry.new(child, :add_task_entry)
+  class EditTaskDialog < Such::Dialog
+    def initialize(parent, text='')
+      super([parent: parent], :edit_task_dialog)
+      @entry = Such::Entry.new(child, {set_text: text}, :edit_task_entry)
       add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
       add_button(Gtk::Stock::OK, Gtk::ResponseType::OK)
     end
@@ -189,7 +189,7 @@ module Gtk2ToDoApp
           end
         end
         ebe = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
-          # TODO: edit_task!(task) if e.button==1
+          edit_task!(task) if e.button==1
         end
         Such::Image.new(ebe, [stock: Gtk::Stock::EDIT], :stock_image)
         ebd = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
@@ -215,7 +215,7 @@ module Gtk2ToDoApp
     end
 
     def add_task!
-      if raw = AddTaskDialog.new(@window).runs
+      if raw = EditTaskDialog.new(@window).runs
         @active = false
         begin
           task = Todo::Task.new raw
@@ -274,6 +274,13 @@ module Gtk2ToDoApp
         ensure
           @active = true
         end
+      end
+    end
+
+    def edit_task!(task)
+      s = task.to_s
+      if edited = EditTaskDialog.new(@window, s).runs
+        # TODO
       end
     end
 
