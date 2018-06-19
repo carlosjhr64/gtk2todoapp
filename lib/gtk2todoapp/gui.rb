@@ -165,7 +165,11 @@ module Gtk2ToDoApp
         task_box = Such::Box.new(@tasks_box, :hbox!)
         text = task.text.dup
         text << ": #{due_on}" if due_on
-        cb = Such::CheckButton.new(task_box, [text], {set_active: task.done?}, 'clicked') do
+        cb = Such::CheckButton.new(task_box,
+                                   [text],
+                                   :task_check_button,
+                                   {set_active: task.done?},
+                                   'clicked') do
           cb.active? ? task.done! : task.not_done!
           cb.set_tooltip_text task.to_s
         end
@@ -184,10 +188,14 @@ module Gtk2ToDoApp
             cb.override_color :normal, @colorZ
           end
         end
-        eb = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
+        ebe = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
+          # TODO: edit_task!(task) if e.button==1
+        end
+        Such::Image.new(ebe, [stock: Gtk::Stock::EDIT], :stock_image)
+        ebd = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
           delete_task!(task) if e.button==1
         end
-        Such::Image.new(eb, [stock: Gtk::Stock::DELETE])
+        Such::Image.new(ebd, [stock: Gtk::Stock::DELETE], :stock_image)
       end
       @tasks_box.show_all
     end

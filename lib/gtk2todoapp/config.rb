@@ -57,6 +57,10 @@ module Gtk2ToDoApp
       scrolled_window: {
         into: [:pack_start, expand: true, fill: true, padding: 1],
       },
+      # Task's CheckButton
+      task_check_button: {set_width_request: 200},
+      # Stock Images
+      stock_image: {set_width_request: 20},
       # Add Task Menu Item
       ADD_TASK: [label: 'Add Task'],
       add_task!: [:ADD_TASK, 'activate'],
