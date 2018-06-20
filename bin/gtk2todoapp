@@ -1,3 +1,22 @@
 #!/usr/bin/env ruby
+
+module Gtk2ToDoApp
+  VERSION = '2.0.0'
+  if _ = ARGV.shift
+    if ['-v','--version'].include?(_)
+      puts VERSION
+    else
+      puts <<-HELP
+Usage:
+  gtk2todoap
+Uses todotxt.org's format for todo text files,
+typically in:
+  ~/.cache/gtk3app/gtk2todoapp/todo.txt
+      HELP
+    end
+    exit
+  end
+end
+
 require 'gtk2todoapp'
 Gtk3App.main(Gtk2ToDoApp)

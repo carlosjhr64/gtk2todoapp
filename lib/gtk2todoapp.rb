@@ -1,7 +1,3 @@
-module Gtk2ToDoApp
-  VERSION = '2.0.0'
-end
-
 require 'todo-txt'
 require 'gtk3app'
 
