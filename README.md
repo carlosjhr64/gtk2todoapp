@@ -15,4 +15,9 @@ using [todo-txt](https://rubygems.org/gems/todo-txt).
 
 ## HELP:
 
+    Usage:
+      gtk2todoap
+    Uses todotxt.org's format for todo text files,
+    typically in:
+      ~/.cache/gtk3app/gtk2todoapp/todo.txt
 
