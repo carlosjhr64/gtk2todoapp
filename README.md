@@ -35,6 +35,6 @@ The configuation file is found in:
 
     Usage:
       gtk2todoap
-    Uses todotxt.org's format for todo text files,
-    typically in:
+    Uses todotxt.org's format for todo text files:
       ~/.cache/gtk3app/gtk2todoapp/todo.txt
+
