@@ -70,6 +70,8 @@ module Gtk2ToDoApp
       # Delete Task Dialog
       delete_task_dialog: {set_title: 'Delete?'},
       delete_task_label: Rafini::Empty::HASH,
+      # Minime
+      minime_menu_item: Rafini::Empty::HASH,
     }
   }
 end

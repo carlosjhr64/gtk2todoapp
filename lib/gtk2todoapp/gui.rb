@@ -89,6 +89,10 @@ module Gtk2ToDoApp
       cmp
     end
 
+    TSK = lambda do |task|
+      "#{task.done? ? 'x' : ' '} #{task.text}"
+    end
+
     def resets
       today = Date.today
       @tasks.each do |task|
@@ -115,10 +119,9 @@ module Gtk2ToDoApp
       @tasks.sort!{|a,b|CMP[a,b]}
 
       ### Scaffolding ###
-      @window,minime,menu = program.window,program.mini_menu,program.app_menu
+      @window,@minime,menu = program.window,program.mini_menu,program.app_menu
       menu.each{|_|_.destroy if _.key==:fs!}
       menu.append_menu_item(:add_task!){ add_task! }
-      minime.each{|_|_.destroy}
       vbox = Such::Box.new(@window, :vbox!)
 
       ### Filters Box ###
@@ -158,6 +161,7 @@ module Gtk2ToDoApp
     def do_tasks
       return unless @active
       @tasks_box.each{|_|_.destroy}
+      @minime.each{|_|_.destroy}
       today = Date.today
       @tasks.each do |task|
         # Include done?
@@ -179,6 +183,7 @@ module Gtk2ToDoApp
           next unless @contexts.active==0 or task.contexts.include?("@#{@contexts.active_text}")
         end
         # Build the tasks box!
+        item = nil # <= reserve this variable to be set later, but to used next...
         task_box = Such::Box.new(@tasks_box, :hbox!)
         text = task.text.dup
         text << ": #{due_on}" if due_on
@@ -187,8 +192,13 @@ module Gtk2ToDoApp
                                    :task_check_button,
                                    {set_active: task.done?},
                                    'clicked') do
-          cb.active? ? task.done! : task.not_done!
+          if cb.active?
+            task.done!
+          else
+            task.not_done!
+          end
           cb.set_tooltip_text task.to_s
+          item.set_label TSK[task]
         end
         cb.set_tooltip_text task.to_s
         if task.overdue?
@@ -213,8 +223,20 @@ module Gtk2ToDoApp
           delete_task!(task) if e.button==1
         end
         Such::Image.new(ebd, [stock: Gtk::Stock::DELETE], :stock_image)
+        item = Such::MenuItem.new([label: TSK[task]], :minime_menu_item, 'activate') do
+          if task.done?
+            task.not_done!
+            cb.set_active(false)
+          else
+            task.done!
+            cb.set_active(true)
+          end
+          item.set_label TSK[task]
+        end
+        @minime.append(item)
       end
       @tasks_box.show_all
+      @minime.show_all
     end
 
     def get_projects
