@@ -135,6 +135,7 @@ module Gtk2ToDoApp
       ### Scaffolding ###
       @window,@minime,menu = program.window,program.mini_menu,program.app_menu
       menu.each{|_|_.destroy if _.key==:fs!}
+      menu.append_menu_item(:save!){ @tasks.save! }
       menu.append_menu_item(:add_task!){ add_task! }
       vbox = Such::Box.new(@window, :vbox!)
 

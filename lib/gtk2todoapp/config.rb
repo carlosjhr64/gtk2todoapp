@@ -63,7 +63,12 @@ module Gtk2ToDoApp
       stock_image: {set_width_request: 20},
       # Add Task Menu Item
       ADD_TASK: [label: 'Add Task'],
-      add_task!: [:ADD_TASK, 'activate'],
+      add_task: {into: :prepend},
+      add_task!: [:ADD_TASK, :add_task, 'activate'],
+      # Save Menu Item
+      SAVE: [label: 'Save'],
+      save: {into: :prepend},
+      save!: [:SAVE, :save, 'activate'],
       # Add Task Dialog
       edit_task_dialog: {set_title: 'Task:'},
       edit_task_entry: {set_width_request: 300},
