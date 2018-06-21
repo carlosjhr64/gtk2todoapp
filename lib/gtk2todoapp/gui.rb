@@ -124,7 +124,9 @@ module Gtk2ToDoApp
       @colorZ = Gdk::RGBA.parse(CONFIG[:ColorZ])
       @late = Gdk::RGBA.parse(CONFIG[:Late])
       ### Data ###
-      @tasks = Todo::List.new CONFIG[:TodoTxt]
+      todo_txt=CONFIG[:TodoTxt]
+      File.write(todo_txt, "(A) Gtk2TodoApp +Tasks @PC") unless File.exist?(todo_txt)
+      @tasks = Todo::List.new todo_txt
       resets
       @tasks.sort!{|a,b|CMP[a,b]}
 
