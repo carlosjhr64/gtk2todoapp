@@ -18,6 +18,16 @@ module Gtk2ToDoApp
       def set_created_on
         @created_on = Date.today
       end
+
+      def cycle_up!
+        if @priority.nil? or @priority>'C'
+          @priority = 'C'
+        elsif @priority<'B'
+          @priority = nil
+        else
+          @priority = (priority.ord-1).chr
+        end
+      end
     end
   end
 
@@ -215,9 +225,18 @@ module Gtk2ToDoApp
             cb.override_color :normal, @colorZ
           end
         end
+        # Increment priority
+        ebu = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
+          task.cycle_up!  if e.button==1
+          @tasks.sort!{|a,b|CMP[a,b]}
+          do_tasks
+        end
+        Such::Image.new(ebu, [stock: Gtk::Stock::GO_UP], :stock_image)
+        # Edit task
         ebe = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
           edit_task!(task) if e.button==1
         end
+        # Delete task
         Such::Image.new(ebe, [stock: Gtk::Stock::EDIT], :stock_image)
         ebd = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
           delete_task!(task) if e.button==1
