@@ -1,14 +1,14 @@
 Gem::Specification.new do |s|
 
   s.name     = 'gtk2todoapp'
-  s.version  = '2.0.0'
+  s.version  = '2.1.0'
 
   s.homepage = 'https://github.com/carlosjhr64/gtk2todoapp'
 
   s.author   = 'carlosjhr64'
   s.email    = 'carlosjhr64@gmail.com'
 
-  s.date     = '2018-06-20'
+  s.date     = '2018-06-21'
   s.licenses = ['MIT']
 
   s.description = <<DESCRIPTION
@@ -28,7 +28,7 @@ SUMMARY
 LICENSE
 README.md
 bin/gtk2todoapp
-cache/todo.txt
+cache/README.txt
 data/VERSION
 data/logo.png
 lib/gtk2todoapp.rb
