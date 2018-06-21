@@ -117,12 +117,14 @@ module Gtk2ToDoApp
 
     def initialize(program)
       @active = true
+
       ### Priority Colors ###
       @colorA = Gdk::RGBA.parse(CONFIG[:ColorA])
       @colorB = Gdk::RGBA.parse(CONFIG[:ColorB])
       @colorC = Gdk::RGBA.parse(CONFIG[:ColorC])
       @colorZ = Gdk::RGBA.parse(CONFIG[:ColorZ])
       @late = Gdk::RGBA.parse(CONFIG[:Late])
+
       ### Data ###
       todo_txt=CONFIG[:TodoTxt]
       File.write(todo_txt, "(A) Gtk2TodoApp +Tasks @PC") unless File.exist?(todo_txt)
@@ -172,31 +174,40 @@ module Gtk2ToDoApp
 
     def do_tasks
       return unless @active
+
+      # Clear displays
       @tasks_box.each{|_|_.destroy}
       @minime.each{|_|_.destroy}
+
       today = Date.today
       @tasks.each do |task|
+
         # Include done?
         due_on = task.due_on
         unless @hidden.active?
           next if task.done?
           next if due_on and (due_on - today).to_i > CONFIG[:HiddenDays]
         end
+
         # Which projects to include?
         if @projects.active_text == CONFIG[:Empty]
           next unless task.projects.empty?
         else
           next unless @projects.active==0 or task.projects.include?("+#{@projects.active_text}")
         end
+
         # Which contexts to include?
         if @contexts.active_text == CONFIG[:Empty]
           next unless task.contexts.empty?
         else
           next unless @contexts.active==0 or task.contexts.include?("@#{@contexts.active_text}")
         end
+
         # Build the tasks box!
         item = nil # <= reserve this variable to be set later, but to used next...
         task_box = Such::Box.new(@tasks_box, :hbox!)
+
+        # Check List Item
         text = task.text.dup
         text << ": #{due_on}" if due_on
         cb = Such::CheckButton.new(task_box,
@@ -227,23 +238,28 @@ module Gtk2ToDoApp
             cb.override_color :normal, @colorZ
           end
         end
-        # Increment priority
+
+        # Increment Priority Image Button
         ebu = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
           task.cycle_up!  if e.button==1
           @tasks.sort!{|a,b|CMP[a,b]}
           do_tasks
         end
         Such::Image.new(ebu, [stock: Gtk::Stock::GO_UP], :stock_image)
-        # Edit task
+
+        # Edit Task Image Button
         ebe = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
           edit_task!(task) if e.button==1
         end
-        # Delete task
         Such::Image.new(ebe, [stock: Gtk::Stock::EDIT], :stock_image)
+
+        # Delete Task Image Button
         ebd = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
           delete_task!(task) if e.button==1
         end
         Such::Image.new(ebd, [stock: Gtk::Stock::DELETE], :stock_image)
+
+        # Rebuild MiniMe Menu Items
         item = Such::MenuItem.new([label: TSK[task]], :minime_menu_item, 'activate') do
           if task.done?
             task.not_done!
@@ -256,6 +272,8 @@ module Gtk2ToDoApp
         end
         @minime.append(item)
       end
+
+      # Show All
       @tasks_box.show_all
       @minime.show_all
     end
