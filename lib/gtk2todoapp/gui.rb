@@ -173,6 +173,23 @@ module Gtk2ToDoApp
       @window.show_all
     end
 
+    def get_color(task)
+      if task.overdue?
+        @late
+      else
+        case task.priority
+        when 'A'
+          @colorA
+        when 'B'
+          @colorB
+        when 'C'
+          @colorC
+        else
+          @colorZ
+        end
+      end
+    end
+
     def do_tasks
       return unless @active
 
@@ -225,20 +242,10 @@ module Gtk2ToDoApp
           item.set_label TSK[task]
         end
         cb.set_tooltip_text task.to_s
-        if task.overdue?
-          cb.override_color :normal, @late
-        else
-          case task.priority
-          when 'A'
-            cb.override_color :normal, @colorA
-          when 'B'
-            cb.override_color :normal, @colorB
-          when 'C'
-            cb.override_color :normal, @colorC
-          else
-            cb.override_color :normal, @colorZ
-          end
-        end
+
+        # Set Color
+        color = get_color(task)
+        cb.override_color :normal, color
 
         # Increment Priority Image Button
         ebu = Such::EventBox.new(task_box, 'button_press_event') do |w,e|
@@ -271,6 +278,7 @@ module Gtk2ToDoApp
           end
           item.set_label TSK[task]
         end
+        item.override_color :normal, color
         @minime.append(item)
       end
 
