@@ -1,11 +1,11 @@
 TODO:
 
-* High Priority Filter
 
 DONE:
 
 * Don't reset filters unless needed
 * Color code minime menu items
+* High Priority Filter
 
 == File List
 

@@ -158,10 +158,16 @@ module Gtk2ToDoApp
                                {append_text: contexts, set_active: 0},
                                'changed'){ do_tasks }
 
+      # Priority
+      @important = Such::CheckButton.new(filters_box,
+                                    [CONFIG[:Important]],
+                                    :important_check_box,
+                                    'clicked'){ do_tasks }
+
       # Done
       @hidden = Such::CheckButton.new(filters_box,
                                     [CONFIG[:Hidden]],
-                                    :check,
+                                    :hidden_check_box,
                                     'clicked'){ do_tasks }
 
       # Scrolled Tasks Box
@@ -199,6 +205,7 @@ module Gtk2ToDoApp
 
       today = Date.today
       @tasks.each do |task|
+        next if task.priority.nil? and @important.active?
 
         # Include done?
         due_on = task.due_on

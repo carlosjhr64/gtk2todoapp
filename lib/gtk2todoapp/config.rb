@@ -12,6 +12,7 @@ module Gtk2ToDoApp
     Contexts: 'Contexts:',
     Empty: '-',
     Hidden: 'Hidden',
+    Important: 'Priority',
     # Colors
     ColorA: '#FF8C00',
     ColorB: '#008000',
@@ -41,8 +42,9 @@ module Gtk2ToDoApp
       },
       # ComboBox
       combo: Rafini::Empty::HASH,
-      # CheckBox
-      check: Rafini::Empty::HASH,
+      # CheckBoxes
+      hidden_check_box: {set_active: false},
+      important_check_box: {set_active: true},
       # Error Message Dialog
       error_dialog: Rafini::Empty::HASH,
       # VBOX
