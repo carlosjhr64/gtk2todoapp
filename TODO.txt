@@ -1,3 +1,12 @@
+TODO:
+
+* High Priority Filter
+* Color code minime menu items
+
+DONE:
+
+* Don't reset filters unless needed
+
 == File List
 
 

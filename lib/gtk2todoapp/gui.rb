@@ -323,25 +323,25 @@ module Gtk2ToDoApp
 
     def reset_filters(task)
       # Reset the filters
-      @hidden.set_active task.done?
+      @hidden.set_active true if task.done?
+
       # Projects filter
-      no_project = task.projects.empty?
-      @projects.remove_all unless no_project
-      project = no_project ? CONFIG[:Empty] : task.projects.first[1..-1]
-      project_index = 0
+      project_index = (@projects.active==0) ? 0 : nil
+      project = task.projects.empty?  ? CONFIG[:Empty] : task.projects.first[1..-1]
+      @projects.remove_all
       get_projects.each_with_index do |p,i|
-        project_index = i if project==p
-        @projects.append_text(p) unless no_project
+        project_index = i if project_index.nil? and project==p
+        @projects.append_text(p)
       end
       @projects.set_active project_index
+
       # Contexts filter
-      no_context = task.contexts.empty?
-      @contexts.remove_all unless no_context
-      context = no_context ? CONFIG[:Empty] : task.contexts.first[1..-1]
-      context_index = 0
+      context_index = (@contexts.active==0) ? 0 : nil
+      context = task.contexts.empty?  ? CONFIG[:Empty] : task.contexts.first[1..-1]
+      @contexts.remove_all
       get_contexts.each_with_index do |c,i|
-        context_index = i if context==c
-        @contexts.append_text(c) unless no_context
+        context_index = i if context_index.nil? and context==c
+        @contexts.append_text(c)
       end
       @contexts.set_active context_index
     end
