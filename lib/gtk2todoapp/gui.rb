@@ -339,6 +339,7 @@ module Gtk2ToDoApp
     def reset_filters(task)
       # Reset the filters
       @hidden.set_active true if task.done?
+      @important.set_active false if task.priority.nil?
 
       # Projects filter
       project_index = (@projects.active==0) ? 0 : nil

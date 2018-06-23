@@ -3,6 +3,7 @@ TODO:
 
 DONE:
 
+* reset pririty
 * Don't reset filters unless needed
 * Color code minime menu items
 * High Priority Filter
