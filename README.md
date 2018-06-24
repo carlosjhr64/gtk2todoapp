@@ -18,6 +18,7 @@ using [todo-txt](https://rubygems.org/gems/todo-txt).
 See the ruby gem [todo-txt](https://github.com/todotxt/todo.txt) for the standard format rules.
 Supports the following tags for reoccurring tasks:
 
+* restart:1 resets every time the app starts.
 * daily:1
 * weekly:n where n is day of week(0..6).
 * monthly:n where n is day month(0..28).

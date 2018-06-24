@@ -108,6 +108,7 @@ module Gtk2ToDoApp
       @tasks.each do |task|
         next unless task.done?
         tags = task.tags
+        task.not_done! if tags.key?(:restart)
         task.not_done! if tags.key?(:daily) and task.completed_on < today
         task.not_done! if tags.key?(:weekly) and task.completed_on < PREVIOUS_WDAY[today, tags[:weekly].to_i]
         task.not_done! if tags.key?(:monthly) and task.completed_on <= PREVIOUS_MDAY[today, tags[:monthly].to_i]
@@ -315,6 +316,9 @@ module Gtk2ToDoApp
       if due = tags[:due]
         raise "due: date not yyyy-mm-dd!" unless due=~/^\d\d\d\d-\d\d-\d\d$/
         Date.parse due # just checks for valid date
+      end
+      if restart = tags[:restart]
+        raise "restart: must be 1." unless restart=='1'
       end
       if daily = tags[:daily]
         raise "daily: must be 1." unless daily=='1'
