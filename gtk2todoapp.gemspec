@@ -37,7 +37,7 @@ lib/gtk2todoapp/gui.rb
   )
   s.executables << 'gtk2todoapp'
   s.add_runtime_dependency 'todo-txt', '= 0.12'
-  s.add_runtime_dependency 'gtk3app', '~> 3.0', '>= 2.0.0'
+  s.add_runtime_dependency 'gtk3app', '~> 3.0', '>= 3.0.0'
   s.requirements << 'ruby: ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-linux]'
   s.requirements << 'tail: tail (GNU coreutils) 8.29'
   s.requirements << 'mv: mv (GNU coreutils) 8.29'
