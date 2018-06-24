@@ -1,0 +1,12 @@
+#! ruby
+require 'test/unit'
+require 'gtk2todoapp'
+
+class TestVersion < Test::Unit::TestCase
+  def test_version
+    assert_nothing_raised() do
+      # Just check that it loads
+      Gtk2ToDoApp.requires
+    end
+  end
+end
