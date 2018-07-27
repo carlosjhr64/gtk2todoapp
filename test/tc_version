@@ -5,7 +5,7 @@ require 'gtk2todoapp'
 class TestVersion < Test::Unit::TestCase
   def test_version
     assert_nothing_raised() do
-      version = '2.3.0'
+      version = '2.4.0'
       assert_equal version, Gtk2ToDoApp::VERSION
       assert_equal version, File.read('./data/VERSION').strip
     end
