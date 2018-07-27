@@ -113,6 +113,7 @@ module Gtk2ToDoApp
         task.not_done! if tags.key?(:weekly) and task.completed_on < PREVIOUS_WDAY[today, tags[:weekly].to_i]
         task.not_done! if tags.key?(:monthly) and task.completed_on <= PREVIOUS_MDAY[today, tags[:monthly].to_i]
         task.not_done! if tags.key?(:yearly) and task.completed_on <= PREVIOUS_YDAY[today, *tags[:yearly].split('-').map{|_|_.to_i}]
+        task.not_done! if tags.key?(:reset) and (task.completed_on + tags[:reset].to_i) <= today
       end
     end
 
@@ -334,6 +335,9 @@ module Gtk2ToDoApp
         m,d = monthly.split('-').map{|_|_.to_i}
         raise "Bad month(1..12) number in mm-dd." unless (1..12).include?(m)
         raise "Bad day(1..28) number in mm-dd." unless (1..28).include?(d)
+      end
+      if reset = tags[:reset]
+        raise "reset: must be an integer greater than zero." unless reset=~/^[123456789]\d*$/
       end
       # Auto set some values
       task.set_created_on
