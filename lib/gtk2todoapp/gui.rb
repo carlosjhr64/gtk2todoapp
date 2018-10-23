@@ -117,6 +117,17 @@ module Gtk2ToDoApp
       end
     end
 
+    def escalate
+      today = Date.today
+      @tasks.each do |task|
+        next if task.done?
+        next unless task.priority.nil? or task.priority <= 'C'
+        if due_on = task.due_on
+          task.cycle_up! if (due_on - today).to_i < CONFIG[:EscalateDays]
+        end
+      end
+    end
+
     def initialize(program)
       @active = true
 
@@ -132,6 +143,7 @@ module Gtk2ToDoApp
       File.write(todo_txt, "(A) Gtk2TodoApp +Tasks @PC") unless File.exist?(todo_txt)
       @tasks = Todo::List.new todo_txt
       resets
+      escalate
       @tasks.sort!{|a,b|CMP[a,b]}
 
       ### Scaffolding ###

@@ -1,5 +1,5 @@
 module Gtk2ToDoApp
-  VERSION = '2.4.0'
+  VERSION = '2.5.0'
   if _ = ARGV.shift
     if ['-v','--version'].include?(_)
       puts VERSION

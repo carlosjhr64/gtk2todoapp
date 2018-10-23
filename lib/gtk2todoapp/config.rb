@@ -21,6 +21,7 @@ module Gtk2ToDoApp
     Late: '#FF0000',
     # Integers
     HiddenDays: 91,
+    EscalateDays: 7,
     ArchiveDays: 28,
     ArchiveLines: 1000,
     # GUI Config
