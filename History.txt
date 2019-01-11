@@ -12,3 +12,5 @@ c75a22adc4dd09f5da9c56c0dbb15a74  pkg/gtk2todoapp-2.3.0.gem
 0d9be6edfe45d01771b4849d61642716  pkg/gtk2todoapp-2.4.0.gem
 === 2.5.0 / 2018-10-23 11:40:25 -0700
 eb2ad11be444d31e08ead1da9021c7fa  pkg/gtk2todoapp-2.5.0.gem
+=== 2.5.1 / 2019-01-11 15:49:43 -0800
+8b6e7f9a97450d8c4becfa0cfaacfe14  pkg/gtk2todoapp-2.5.1.gem
