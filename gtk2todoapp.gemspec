@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
 
   s.name     = 'gtk2todoapp'
-  s.version  = '2.5.0'
+  s.version  = '2.5.1'
 
   s.homepage = 'https://github.com/carlosjhr64/gtk2todoapp'
 

@@ -121,7 +121,7 @@ module Gtk2ToDoApp
       today = Date.today
       @tasks.each do |task|
         next if task.done?
-        next unless task.priority.nil? or task.priority <= 'C'
+        next unless task.priority.nil? or task.priority >= 'C'
         if due_on = task.due_on
           task.cycle_up! if (due_on - today).to_i < CONFIG[:EscalateDays]
         end
