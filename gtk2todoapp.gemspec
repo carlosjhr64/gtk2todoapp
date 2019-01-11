@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.author   = 'carlosjhr64'
   s.email    = 'carlosjhr64@gmail.com'
 
-  s.date     = '2018-10-23'
+  s.date     = '2019-01-11'
   s.licenses = ['MIT']
 
   s.description = <<DESCRIPTION
@@ -39,8 +39,8 @@ lib/gtk2todoapp/gui.rb
   s.add_runtime_dependency 'todo-txt', '= 0.12'
   s.add_runtime_dependency 'gtk3app', '~> 3.0', '>= 3.0.0'
   s.requirements << 'ruby: ruby 2.5.1p57 (2018-03-29 revision 63029) [x86_64-linux]'
-  s.requirements << 'tail: tail (GNU coreutils) 8.29'
-  s.requirements << 'mv: mv (GNU coreutils) 8.29'
-  s.requirements << 'wc: wc (GNU coreutils) 8.29'
+  s.requirements << 'tail: tail (GNU coreutils) 8.30'
+  s.requirements << 'mv: mv (GNU coreutils) 8.30'
+  s.requirements << 'wc: wc (GNU coreutils) 8.30'
 
 end
